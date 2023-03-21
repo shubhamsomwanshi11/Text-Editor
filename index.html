@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Text Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+</head>
+
+<body>
+    <section class="section">
+        <h1 class="title has-text-centered is-2">Text Editor</h1>
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field is-centered is-grouped is-grouped-multiline">
+                        <div class="control">
+                            <button class="button" id="boldBtn"><i class="fas fa-bold"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="italicBtn"><i class="fas fa-italic"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="underlineBtn"><i class="fas fa-underline"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="fontSizeBtn"><i class="fas fa-text-height"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="textAlignBtn"><i class="fas fa-align-left"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="textAlignBtn"><i class="fas fa-align-center"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="textAlignBtn"><i class="fas fa-align-right"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="justifyContentBtn"><i class="fas fa-align-justify"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="paragraphBtn"><i class="fas fa-paragraph"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="textColorBtn"><i class="fas fa-font"></i></button>
+                        </div>
+                        <div class="control">
+                            <button class="button" id="backgroundColorBtn"><i class="fas fa-fill"></i></button>
+                        </div>
+                    </div>
+                    <textarea class="textarea" onkeydown="Show()" id="editor"
+                        placeholder="Type something..."></textarea>
+                </div>
+                <div class="column">
+                    <div>
+
+                        <span class="has-text-grey title is-4">Preview</span>
+                            <div class="mr-5 has-text-right">
+                                <i class="fas fa-copy has-text-left" onclick="copyCard('preview')"
+                                style="font-size: 25px; color: gray; cursor: pointer;"></i>
+                            </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-content">
+                            <p id="preview"> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="has-text-centered">
+        <button class="button is-medium is-link" id="copyResponse"
+            style="position: fixed; z-index:9999; bottom: 5%; left: 50%; margin-top: -100px; margin-left: -112px; display: none;">Copied
+            To Clipboard</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <script>
+        function Show() {
+            var preview = document.getElementById('preview')
+            var editor = document.getElementById('editor')
+            preview.innerHTML = editor.value
+        }
+        function copyCard(cardId) {
+            const card = document.getElementById(cardId); // Find the card element with the given ID
+            const textToCopy = card.innerHTML; // Get the HTML content of the card
+            navigator.clipboard.writeText(textToCopy); // Copy the text to the clipboard
+            const copyResponse = document.getElementById('copyResponse'); // Get the copy response element
+            copyResponse.style.display = ''; // Show the copy response element
+            setTimeout(function () {
+                copyResponse.style.display = 'none'; // Hide the copy response element after 2.5 seconds
+            }, 2500);
+        }
+
+    </script>
+</body>
+
+</html>
