@@ -4,68 +4,106 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Text Editor</title>
+    <title>Text Formatter</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <style>
+        #floating-window {
+            position: fixed;
+            top: 15%;
+            margin-right: 40px;
+            right: 0;
+            transform: translateY(-50%);
+            width: 300px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
 
+        #floating-window-content {
+            padding: 20px;
+        }
+
+        body {
+            background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
+            height: 100vh;
+        }
+    </style>
 </head>
 
 <body>
     <section class="section">
-        <h1 class="title has-text-centered is-2">Text Editor</h1>
         <div class="container">
+            <h1 class="title is-2">Text Formatter</h1>
+            <div class="buttons">
+                <button class="button" onclick="formatText('bold')">
+                    <span class="icon"><i class="fas fa-bold"></i></span>
+                </button>
+                <button class="button" onclick="formatText('italic')">
+                    <span class="icon"><i class="fas fa-italic"></i></span>
+                </button>
+                <button class="button" onclick="formatText('underline')">
+                    <span class="icon"><i class="fas fa-underline"></i></span>
+                </button>
+                <button type="button" class="button" onclick="formatText('uppercase-all')">
+                    <b>AA</b>
+                </button>
+                <button type="button" class="button" onclick="formatText('lowercase-all')">
+                    <b>aa</b>
+                </button>
+                <button type="button" class="button  is-small is-rounded" onclick="formatText('capitalize-sentences')">
+                    Capitalize Sentences
+                </button>
+                <button type="button" class="button  is-small is-rounded" onclick="formatText('capitalize-words')">
+                    Capitalize Words
+                </button>
+                <button onclick="showFloatingWindow('trim')" class="button is-small is-rounded">Trim</button>
+                <button onclick="showFloatingWindow('add')" class="button is-small is-rounded">Add Text</button>
+                <button type="button" class="button ml-3 is-link is-small is-rounded"
+                    onclick="showFloatingWindow('find')"><span class="icon"><i
+                            class="fas fa-exchange-alt"></i></span><span>Find and Replace</span></button>
+            </div>
             <div class="columns">
-                <div class="column">
-                    <div class="field is-centered is-grouped is-grouped-multiline">
-                        <div class="control">
-                            <button class="button" id="boldBtn"><i class="fas fa-bold"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="italicBtn"><i class="fas fa-italic"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="underlineBtn"><i class="fas fa-underline"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="fontSizeBtn"><i class="fas fa-text-height"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="textAlignBtn"><i class="fas fa-align-left"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="textAlignBtn"><i class="fas fa-align-center"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="textAlignBtn"><i class="fas fa-align-right"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="justifyContentBtn"><i class="fas fa-align-justify"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="paragraphBtn"><i class="fas fa-paragraph"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="textColorBtn"><i class="fas fa-font"></i></button>
-                        </div>
-                        <div class="control">
-                            <button class="button" id="backgroundColorBtn"><i class="fas fa-fill"></i></button>
-                        </div>
-                    </div>
-                    <textarea class="textarea" oninput="Show()" id="editor"
-                        placeholder="Type something..."></textarea>
-                </div>
-                <div class="column">
-                    <div>
-
-                        <span class="has-text-grey title is-4">Preview</span>
-                            <div class="mr-5 has-text-right">
-                                <i class="fas fa-copy has-text-left" onclick="copyCard('preview')"
-                                style="font-size: 25px; color: gray; cursor: pointer;"></i>
+                <div class="column is-half">
+                    <div class="columns">
+                        <div class="column">
+                            <label class="label">Input Text:</label>
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="field is-flex">
+                                        <div class="control">
+                                            Words : <span id="word-count"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="field is-flex">
+                                        <div class="control">
+                                            Characters : <span id="char-count"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="column">
+                            <button id="reset" type="reset" class="button is-link is-light is-small is-rounded"
+                                style="margin-top: 5px; float: right;"> Reset</button>
+                        </div>
                     </div>
-                    <div class="card mt-3">
-                        <div class="card-content">
-                            <p id="preview"> </p>
+                    <div class="control">
+                        <textarea id="input-text" class="textarea" style="min-height: 39vh;" rows="12" placeholder="Enter text here"
+                            oninput="formatText('input')"></textarea>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field mt-2">
+                        <label class="label">Output Text:</label>
+                        <div class="control card mt-6 px-4 py-4" style="min-height: 39vh;">
+                            <div style="float: right;" id="copy-btn" class="button is-primary is-rounded">
+                                Copy <i id="copy-icon" class="fas ml-2 fa-copy"></i>
+                            </div>
+                            <p id="output-text"></p>
                         </div>
                     </div>
                 </div>
@@ -73,30 +111,99 @@
         </div>
     </section>
 
-    <div class="has-text-centered">
-        <button class="button is-medium is-link" id="copyResponse"
-            style="position: fixed; z-index:9999; bottom: 5%; left: 50%; margin-top: -100px; margin-left: -112px; display: none;">Copied
-            To Clipboard</button>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-    <script>
-        function Show() {
-            var preview = document.getElementById('preview')
-            var editor = document.getElementById('editor')
-            preview.innerHTML = editor.value
-        }
-        function copyCard(cardId) {
-            const card = document.getElementById(cardId); // Find the card element with the given ID
-            const textToCopy = card.innerHTML; // Get the HTML content of the card
-            navigator.clipboard.writeText(textToCopy); // Copy the text to the clipboard
-            const copyResponse = document.getElementById('copyResponse'); // Get the copy response element
-            copyResponse.style.display = ''; // Show the copy response element
-            setTimeout(function () {
-                copyResponse.style.display = 'none'; // Hide the copy response element after 2.5 seconds
-            }, 2500);
-        }
+    <div id="floating-window" class="is-hidden">
+        <div id="floating-window-content">
+            <div class="field is-hidden" id="find">
+                <div class="columns">
+                    <div class="column">
+                        <label class="label">Find and Replace:</label>
+                    </div>
+                    <div class="column is2">
+                        <button onclick="showFloatingWindow('close')" style="float: right"
+                            class="button is-danger">X</button>
+                        <label class="checkbox mt-2">
+                            <input id="case-sensitive" class="is-left pb-2" type="checkbox" />
+                            Case Sensitive
+                        </label>
+                    </div>
+                </div>
+                <div class="columns is-multiline">
+                    <div class="column is-half">
+                        <div class="field">
+                            <div class="control has-icons-right">
+                                <input id="find-text" class="input" type="text" placeholder="Enter text to find" />
+                                <span class="icon is-small is-right">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="button" class="button  is-link is-small is-rounded"
+                            onclick="formatText('find-and-replace')">
+                            <span class="icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </span>
+                            <span>Find and Replace</span>
+                        </button>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <div class="control has-icons-right">
+                                <input id="replace-text" class="input" type="text"
+                                    placeholder="Enter text to replace with" />
+                                <span class="icon is-small is-right">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    </script>
+            <div id="trim" class="is-hidden">
+
+                <div class="select">
+                    <select name="" class="select" id="trimPos">
+                        <option value="First">First</option>
+                        <option value="Last">Last</option>
+                    </select>
+                </div>
+                <div class="select">
+                    <select name="" class="select" id="trimChar">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+                <button class="button is-primary mt-1 is-small is-rounded" onclick="formatText('trim-text')">
+                    Trim
+                </button>
+                <button onclick="showFloatingWindow('close')" class="button is-small is-danger mt-1">X</button>
+            </div>
+            <div id="add" class="is-hidden">
+                <span class="">to the</span>
+                <div class="select is-small">
+                    <select name="select" id="select">
+                        <option value="Start">Start</option>
+                        <option value="end">End</option>
+                    </select>
+                </div>
+                <span>of each line.</span>
+                <button onclick="showFloatingWindow('close')" class="button is-small is-danger">X</button>
+                <input type="text" class="input mx-2 mt-3" />
+                <button type="button" class="button mt-3 is-primary is-small is-rounded" value="ADD"
+                    onclick="formatText('add-text')">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
 </body>
 
 </html>
